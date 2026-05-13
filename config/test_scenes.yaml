@@ -1,0 +1,21 @@
+scenes:
+  - name: straight_with_obstacle
+    seam_type: line
+    start: [200, 0, 100]
+    end: [600, 0, 100]
+    obstacles:
+      - pos: [400, 50, 150]     # sphere center
+        radius: 60
+  - name: s_curve
+    seam_type: spline
+    control_points: [[200,0,100],[300,80,120],[500,-60,80],[600,0,100]]
+    obstacles: []
+  - name: pipe_intersection
+    seam_type: circular_arc
+    center: [400, 0, 100]
+    radius: 150
+    start_angle: 0
+    end_angle: 180
+    obstacles:
+      - pos: [400, 100, 150]
+        radius: 40
