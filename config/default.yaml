@@ -1,0 +1,42 @@
+# EGM connection
+egm_host: "192.168.125.1"   # RobotStudio virtual controller IP
+egm_port: 6510
+
+# Policy
+policy_rate: 0.016            # seconds (16 ms, ~62.5 Hz)
+max_linear_vel: 50            # mm/s
+max_angular_vel: 30           # deg/s converted to rad/s internally
+
+# Action / state normalisation
+joint_limits: [2.967, 1.745, 2.967, 3.142, 2.094, 6.283]  # rad, IRB 1600
+workspace_size: 1000           # mm cube for normalisation
+
+# Reward weights
+reward_weights:
+  progress: 20.0               # per mm along seam
+  alignment: 10.0              # per rad of torch orientation error
+  smooth: 0.001                # per sum of squared joint accelerations
+  speed_penalty: 5.0           # for speed deviation > 10%
+  standoff: 2.0                # per mm standoff error
+  close_penalty: 5.0           # for distance < 20 mm
+  collision_penalty: -100      # binary collision
+  completion_bonus: 200        # successful seam finish
+target_speed: 10.0             # mm/s desired welding speed
+target_standoff: 12.0          # mm
+
+# Training
+n_envs: 4
+total_timesteps: 2000000
+n_steps: 2048
+batch_size: 64
+learning_rate: 0.0003
+gamma: 0.99
+gae_lambda: 0.95
+ent_coef: 0.01
+net_arch: [256, 256]
+
+# Seam randomisation (for training)
+seam_length_range: [100, 400]  # mm
+curvature_max: 0.02            # 1/mm (controls bending)
+obstacle_radius_range: [30, 80]
+obstacle_count_range: [1, 3]
