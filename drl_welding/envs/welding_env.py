@@ -9,16 +9,23 @@ from drl_welding.utils.collision import CollisionChecker
 from drl_welding.utils.state_assembler import StateAssembler
 from drl_welding.reward.reward_calculator import RewardCalculator
 
-class WeldingEnv(gym.Env):
-    metadata = {"render_modes": ["human"]}
+import os
+from drl_welding.egm.mock_egm import MockEGMWrapper   # add this import
 
+class WeldingEnv(gym.Env):
     def __init__(self, config):
         super().__init__()
         self.config = config
         self.dt = config['policy_rate']
         self.max_steps = config.get('max_episode_steps', 1000)
         self.current_step = 0
-
+        # Choose EGM backend
+        if os.environ.get("MOCK_EGM", "0") == "1":
+            self.egm = MockEGMWrapper()
+            print("[MOCK] Using mock EGM client")
+        else:
+            self.egm = EGMWrapper(config['egm_host'], config['egm_port'])
+      
         # EGM communication
         self.egm = EGMWrapper(config['egm_host'], config['egm_port'])
 
